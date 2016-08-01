@@ -3,6 +3,7 @@ CC=g++
 all: genesplicer_omicia genesplicer
 
 genesplicer_omicia: genesplicer_omicia.o sites.o
+	test -e ../bin || mkdir ../bin
 	$(CC) -o ../bin/genesplicer_omicia genesplicer_omicia.o sites.o -lm
 
 genesplicer: genesplicer.o sites.o
