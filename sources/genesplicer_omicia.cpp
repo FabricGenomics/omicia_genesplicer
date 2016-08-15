@@ -5,7 +5,7 @@
  *   genesplicer.cpp was designed by Mihaela PERTEA to find splice 
  *   sites in a fasta file
  
- * Modified by Omicia inc. to read seaquenceline from STDIN as well
+ * Modified by Omicia inc. to read sequences from STDIN as well
  
 
 */
@@ -34,9 +34,7 @@ int DISTD = 150;  // represents the distance within I choose the best donor scor
 unsigned char donor_tree = '1';
 unsigned char acceptor_tree = '1';
 
-char Path[PATH_MAX+1];
 char TRAIN_DIR[PATH_MAX+1]="";
-char INPUT_DIR[PATH_MAX+1]="";
 
 unsigned char use_cod_noncod;
 
@@ -155,6 +153,7 @@ int main(int argc, char * argv []) {
         }
     }
     else {
+//        std::cin.ignore(26, '\n'); //ignore 26 characters or to a newline, whichever comes first
         std::cin >> sData;
         std::string delimiter = "!";
         while ((pos = sData.find(delimiter)) != std::string::npos) {
@@ -189,7 +188,7 @@ output_struct AnalyzeData(char *Data) {
 
     int  Is_Acceptor  (const int *, double *);
     int  Is_Donor  (const int *, double *);
-    
+
     double score;
     long int offset,i,j;
     long int Data_Len;
@@ -296,88 +295,94 @@ output_struct AnalyzeData(char *Data) {
                 
             }
         }
-        
+
+
+        /*
+         * Omicia's input sequences are always forward stranded.
+         * Analyzing the revard strand is not necessary
+         * changed by bstade
+         */
+
         // reversed direction
-        if(Data[i]=='c' && Data[i+1]=='t') { // Deal with acceptors
-            k=0;
-            for(j=i+81;j>=i-80;j--){
-                switch (Data[j]){
-                    case 'a': B[k]=3;break;
-                    case 'c': B[k]=2;break;
-                    case 'g': B[k]=1;break;
-                    case 't': B[k]=0;break;
-                    default: B[k]=1;
-                }
-                k++;
-            }
-            
-            if(Is_Acceptor(B,&score)) {
-                
-                //	    printf("ag: %ld\n",i+offset+1);
-                
-                // add acceptor to list;
-                site=(Site *) malloc(sizeof(Site));
-                if (site == NULL) {
-                    fprintf(stderr,"Memory allocation for Site position failure.\n");
-                    abort();
-                }
-                
-                site->type=1;
-                site->score=score;
-                site->pos=i+offset;
-                site->dir=-1;
-                site->forw=NULL;
-                site->prev=nod;
-                
-                if (List == NULL) List=site;
-                Cap=site;
-                if (nod != NULL) nod->forw=site;
-                
-                nod=site;
-                
-            }
-        }
-        
-        if (Data[i]=='a' && Data[i+1]=='c') { // Deal with donors
-            
-            k=0;
-            for(j=i+81;j>=i-80;j--){
-                switch (Data[j]){
-                    case 'a': B[k]=3;break;
-                    case 'c': B[k]=2;break;
-                    case 'g': B[k]=1;break;
-                    case 't': B[k]=0;break;
-                    default: B[k]=1;
-                }
-                k++;
-            }
-            
-            if(Is_Donor(B,&score)) {
-                
-                //	    printf("gt: %ld\n",i+offset+1);
-                
-                // add donor to list;
-                site=(Site *) malloc(sizeof(Site));
-                if (site == NULL) {
-                    fprintf(stderr,"Memory allocation for Site position failure.\n"); 
-                    abort();
-                }
-                
-                site->type=2;
-                site->score=score;
-                site->pos=i+offset;
-                site->dir=-1;
-                site->forw=NULL;
-                site->prev=nod;
-                
-                if(List == NULL) List=site;
-                Cap=site;
-                if(nod !=NULL) nod->forw=site;
-                
-                nod=site;
-            }
-            
-        }
+//        if(Data[i]=='c' && Data[i+1]=='t') { // Deal with acceptors
+//            k=0;
+//            for(j=i+81;j>=i-80;j--){
+//                switch (Data[j]){
+//                    case 'a': B[k]=3;break;
+//                    case 'c': B[k]=2;break;
+//                    case 'g': B[k]=1;break;
+//                    case 't': B[k]=0;break;
+//                    default: B[k]=1;
+//                }
+//                k++;
+//            }
+//
+//            if(Is_Acceptor(B,&score)) {
+//                //	    printf("ag: %ld\n",i+offset+1);
+//
+//                // add acceptor to list;
+//                site=(Site *) malloc(sizeof(Site));
+//                if (site == NULL) {
+//                    fprintf(stderr,"Memory allocation for Site position failure.\n");
+//                    abort();
+//                }
+//
+//                site->type=1;
+//                site->score=score;
+//                site->pos=i+offset;
+//                site->dir=-1;
+//                site->forw=NULL;
+//                site->prev=nod;
+//
+//                if (List == NULL) List=site;
+//                Cap=site;
+//                if (nod != NULL) nod->forw=site;
+//
+//                nod=site;
+//
+//            }
+//        }
+//
+//        if (Data[i]=='a' && Data[i+1]=='c') { // Deal with donors
+//
+//            k=0;
+//            for(j=i+81;j>=i-80;j--){
+//                switch (Data[j]){
+//                    case 'a': B[k]=3;break;
+//                    case 'c': B[k]=2;break;
+//                    case 'g': B[k]=1;break;
+//                    case 't': B[k]=0;break;
+//                    default: B[k]=1;
+//                }
+//                k++;
+//            }
+//
+//            if(Is_Donor(B,&score)) {
+//
+//                //	    printf("gt: %ld\n",i+offset+1);
+//
+//                // add donor to list;
+//                site=(Site *) malloc(sizeof(Site));
+//                if (site == NULL) {
+//                    fprintf(stderr,"Memory allocation for Site position failure.\n");
+//                    abort();
+//                }
+//
+//                site->type=2;
+//                site->score=score;
+//                site->pos=i+offset;
+//                site->dir=-1;
+//                site->forw=NULL;
+//                site->prev=nod;
+//
+//                if(List == NULL) List=site;
+//                Cap=site;
+//                if(nod !=NULL) nod->forw=site;
+//
+//                nod=site;
+//            }
+//
+//        }
         
     }
     output.List = List;
