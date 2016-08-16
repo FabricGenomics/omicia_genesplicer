@@ -30,8 +30,9 @@ double ACCEPTOR_HIGH_LIMIT = 14.162281;
 double DONOR_HIGH_LIMIT = 13.220582;;
 double ACCEPTOR_THRESHOLD = 1.016684;
 double DONOR_THRESHOLD = 0.463981;
-int DISTA = 100;  // represents the distance within I choose the best acceptor score
-int DISTD = 150;  // represents the distance within I choose the best donor score
+// set by Omicia to be consitance with NNSplice
+int DISTA = 40;  // represents the distance within I choose the best acceptor score
+int DISTD = 40;  // represents the distance within I choose the best donor score
 unsigned char donor_tree = '1';
 unsigned char acceptor_tree = '1';
 
