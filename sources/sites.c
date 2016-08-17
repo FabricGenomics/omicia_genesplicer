@@ -22,7 +22,6 @@
 extern char TRAIN_DIR[PATH_MAX + 1];
 extern unsigned char donor_tree;
 extern unsigned char acceptor_tree;
-extern unsigned char use_cod_noncod;
 
 #define  TRUE  1
 #define  FALSE  0
@@ -66,8 +65,6 @@ typedef struct tree {
     struct tree *left;
     struct tree *right;
 } tree;
-
-typedef unsigned int word;
 
 int Is_Acceptor(const int *, double *);
 
@@ -154,11 +151,8 @@ int Is_Acceptor(const int *B, double *Return_Score) {
 
     Is_Cod_NonCod(T, &score3, 1);
 
-
     Score = score1 + score2 + score3;
-
     *Return_Score = Score;
-
 
     return Score >= ACCEPTOR_THRESHOLD;
 
@@ -240,10 +234,8 @@ int Is_Donor(const int *B, double *Return_Score) {
 
 
 void readtree(char *line, tree *t, int start) {
-    int len;
     int i, n;
     char part[10];
-    len = strlen(line);
 
     i = start;
     while ((line[i] == '(') || (line[i] == ' ')) i++;
@@ -710,7 +702,5 @@ int Is_Cod_NonCod(const int *S, double *Return_Score, int ind)
 
     return (1);
 }
-
-
 
 
